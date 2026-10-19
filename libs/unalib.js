@@ -22,55 +22,57 @@ module.exports = {
   },
 
   is_valid_url_image: function (url) {
-
-    // inicializacion lazy
-    var isValid = false;
-    // expresion regular copiada de StackOverflow
-    var re = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|jpeg|bmp)/i;
-
-    // validacion Regex
     try {
-      isValid = re.test(url);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      return isValid;
+      if (typeof url !== 'string') {
+        return false;
+      }
+
+      var direccion = new URL(url);
+
+      // Permitir solamente HTTP y HTTPS
+      if (!['http:', 'https:'].includes(direccion.protocol)) {
+        return false;
+      }
+
+      // Validar la extensión de la imagen
+      return /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(direccion.pathname);
+
+    } catch (error) {
+      return false;
     }
-    // fin del try-catch block
   },
 
   is_valid_yt_video: function (url) {
-
-    // inicializacion lazy
-    var isValid = false;
-    // expresion regular copiada de StackOverflow
-    var re = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})?$/i;
-
-    // validacion Regex
     try {
-      isValid = re.test(url);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      return isValid;
+      if (typeof url !== 'string') {
+        return false;
+      }
+
+      var direccion = new URL(url);
+
+      if (!['http:', 'https:'].includes(direccion.protocol)) {
+        return false;
+      }
+
+      var dominio = direccion.hostname.toLowerCase();
+      var id = '';
+
+      if (dominio === 'youtube.com' || dominio === 'www.youtube.com') {
+        if (direccion.pathname === '/watch') {
+          id = direccion.searchParams.get('v') || '';
+        } else if (direccion.pathname.startsWith('/embed/')) {
+          id = direccion.pathname.split('/')[2];
+        }
+      } else if (dominio === 'youtu.be') {
+        id = direccion.pathname.slice(1);
+      }
+
+      // El identificador de YouTube debe tener 11 caracteres
+      return /^[a-zA-Z0-9_-]{11}$/.test(id);
+
+    } catch (error) {
+      return false;
     }
-    // fin del try-catch block
-  },
-
-  getYTVideoId: function (url) {
-
-    return url.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)[1];
-  },
-
-  getEmbeddedCode: function (url) {
-    var id = this.getYTVideoId(url);
-    var code = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + id + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-    return code;
-  },
-
-  getImageTag: function (url) {
-    var tag = '<img src="' + url + '" style="max-height: 400px;max-width: 400px;">';
-    return tag;
   },
 
   validateMessage: function (msg) {
@@ -84,6 +86,23 @@ module.exports = {
       if (!obj || typeof obj !== 'object' ||
         Array.isArray(obj) || typeof obj.mensaje !== 'string') {
         return JSON.stringify({ mensaje: '' });
+      }
+
+      // Validar el nombre del usuario
+      if (typeof obj.nombre !== 'string') {
+        obj.nombre = 'Anonimo';
+      } else {
+        obj.nombre = obj.nombre.trim().slice(0, 30);
+
+        if (!obj.nombre || /[<>]/.test(obj.nombre)) {
+          obj.nombre = 'Anonimo';
+        }
+      }
+
+      // Validar que el color sea hexadecimal
+      if (typeof obj.color !== 'string' ||
+        !/^#[0-9a-fA-F]{6}$/.test(obj.color)) {
+        obj.color = '#000000';
       }
 
       var mensaje = obj.mensaje.trim();

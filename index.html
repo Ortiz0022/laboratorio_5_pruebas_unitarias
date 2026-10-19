@@ -115,6 +115,10 @@
       socket.on('Evento-Mensaje-Server', function (msg) {
         var msgJson = JSON.parse(msg);
         var mensaje = String(msgJson.mensaje || "").trim();
+        // No mostrar mensajes vacios o rechazados
+        if (mensaje === '') {
+          return;
+        }
 
         var nuevoMensaje = $('<li>');
 
