@@ -21,12 +21,12 @@ Otros disponibles: `/opsx-explore`, `/opsx-sync`, `/opsx-update` (definidos en `
 ```
 openspec/
 ├── config.yaml        # schema: spec-driven
-├── specs/             # specs principales (actualmente solo .gitkeep)
+├── specs/             # specs principales (p. ej. chat-media-help/spec.md)
 └── changes/
-    └── archive/       # cambios archivados (actualmente solo .gitkeep)
+    └── archive/       # cambios archivados como YYYY-MM-DD-<nombre>/ (p. ej. 2026-10-18-add-media-help-text/)
 ```
 
-Los cambios activos se crean como `openspec/changes/<nombre>/`. Verifica la estructura con `list_dir` antes de asumir contenido: hoy no hay specs ni cambios registrados.
+Los cambios activos se crean como `openspec/changes/<nombre>/`. Al archivar, el cambio conserva `proposal.md`, `design.md`, `tasks.md`, `specs/` y `.openspec.yaml`, y sus specs delta se sincronizan a `openspec/specs/`. Verifica la estructura con `list_dir` antes de asumir contenido.
 
 ## Reglas
 

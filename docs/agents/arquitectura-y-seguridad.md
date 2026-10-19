@@ -33,3 +33,10 @@
 - Cualquier extensión o esquema nuevo debe actualizarse de forma coherente en `libs/unalib.js` **y** en `index.html`.
 - Agrega pruebas que cubran el caso permitido y al menos un caso rechazado.
 - Conserva el uso de `new URL(...)` y la lista blanca de protocolos; no uses listas negras ni regex sobre la URL completa.
+
+## Al modificar el formulario fijo de `index.html`
+
+- El `<form>` está fijo en la parte inferior (`position: fixed; bottom: 0`). Si agregas elementos o texto que aumenten su altura, revisa y ajusta el `margin-bottom` de `#messages` (se usa 90px, y 140px con `@media (max-width: 600px)`) para que los mensajes no queden ocultos.
+- Comprueba que el formulario y sus elementos sean legibles y utilizables en celular (por ejemplo, ancho ~375px) y en escritorio.
+- Mantén `<meta name="viewport" content="width=device-width, initial-scale=1">` en el `<head>`; sin ella el celular renderiza como escritorio y el texto resulta diminuto.
+- Conserva los ids `#nombre`, `#m`, `#messages` y el botón "Send": las pruebas E2E dependen de ellos.

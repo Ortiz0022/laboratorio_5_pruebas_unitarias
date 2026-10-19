@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chat Socket.IO UNA</title>
   <style>
     * {
@@ -49,7 +50,7 @@
     }
 
     #messages {
-      margin-bottom: 40px
+      margin-bottom: 90px
     }
 
     #nombre,
@@ -65,6 +66,25 @@
     #nombre {
       width: 20%
     }
+
+    /* Texto de ayuda sobre el contenido admitido */
+    .ayuda-contenido {
+      display: block;
+      color: #d0d0d0;
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 6px 4px 3px;
+    }
+
+    @media (max-width: 600px) {
+      #messages {
+        margin-bottom: 140px;
+      }
+
+      .ayuda-contenido {
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 
@@ -73,6 +93,7 @@
   <form action="">
     <input id="nombre" autocomplete="off" placeholder="Username" />
     <input id="m" autocomplete="off" placeholder="Escriba un mensaje" /><button>Send</button>
+    <p class="ayuda-contenido">Puede enviar mensajes normales, URLs de imágenes (jpg, jpeg, png, gif, webp) o URLs de videos (mp4, webm, ogg).</p>
   </form>
   <script src="https://cdn.socket.io/4.7.2/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
