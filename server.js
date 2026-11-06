@@ -17,11 +17,6 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-// TEMPORAL: provoca un error controlado para verificar Sentry. Eliminar después de la prueba.
-app.get('/debug-sentry', function (req, res) {
-  throw new Error('Error de prueba controlado para Sentry - UNA Chat');
-});
-
 // Envía a Sentry los errores no controlados de Express
 Sentry.setupExpressErrorHandler(app);
 
