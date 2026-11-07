@@ -1,14 +1,13 @@
 // otel.js
-require('./server/environment');
+require('dotenv').config();
 
 const { NodeSDK } = require('@opentelemetry/sdk-node');
 const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-http');
 const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-http');
-const { OTLPLogExporter } = require('@opentelemetry/exporter-logs-otlp-http');
 const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-metrics');
-const { LoggerProvider, SimpleLogRecordProcessor } = require('@opentelemetry/sdk-logs');
 const { resourceFromAttributes } = require('@opentelemetry/resources');
 const { trace, metrics } = require('@opentelemetry/api');
+const https = require('https');
 
 const endpoint = (process.env.OTEL_EXPORTER_OTLP_ENDPOINT || '').trim();
 
@@ -16,7 +15,6 @@ let tracer = null;
 let requestsCounter = null;
 let durationHistogram = null;
 let errorsCounter = null;
-let logger = null;
 
 if (endpoint) {
   const serviceName = process.env.OTEL_SERVICE_NAME || 'una-chat';
@@ -24,23 +22,6 @@ if (endpoint) {
     'service.name': serviceName,
     'deployment.environment': 'local'
   });
-
-  const gatewayUrl = endpoint.replace(/\/+$/, '');
-  const authHeader = (process.env.OTEL_EXPORTER_OTLP_HEADERS || '').replace(/^Authorization=/, '').trim();
-
-  // Exporter de logs con la URL y headers de Grafana Cloud explícitos
-  const logExporter = new OTLPLogExporter({
-    url: gatewayUrl.endsWith('/otlp') ? gatewayUrl + '/v1/logs' : gatewayUrl + '/otlp/v1/logs',
-    headers: {
-      Authorization: decodeURIComponent(authHeader)
-    }
-  });
-
-  const loggerProvider = new LoggerProvider({
-    resource: resource,
-    processors: [new SimpleLogRecordProcessor(logExporter)]
-  });
-  logger = loggerProvider.getLogger(serviceName);
 
   const sdk = new NodeSDK({
     resource: resource,
@@ -71,23 +52,61 @@ if (endpoint) {
   });
 
   process.on('SIGTERM', () => {
-    sdk.shutdown()
-      .then(() => loggerProvider.shutdown())
-      .finally(() => process.exit(0));
+    sdk.shutdown().finally(() => process.exit(0));
   });
 }
 
-function emitLog(severityText, body, attributes = {}) {
-  if (logger) {
-    logger.emit({
-      severityText: severityText,
-      body: body,
-      attributes: {
-        'deployment.environment': 'local',
-        ...attributes
-      }
-    });
+// Envío OTLP JSON garantizado a Grafana Cloud (204 No Content)
+function emitLog(severityText, message, attributes = {}) {
+  const rawHeader = process.env.OTEL_EXPORTER_OTLP_HEADERS || '';
+  const auth = decodeURIComponent(rawHeader.replace(/^Authorization=/, '').trim());
+  if (!auth) return;
+
+  const serviceName = process.env.OTEL_SERVICE_NAME || 'una-chat';
+  const nowNano = (Date.now() * 1000000).toString();
+
+  const logAttributes = [
+    { key: 'log.severity', value: { stringValue: severityText } },
+    { key: 'trace_id', value: { stringValue: attributes.trace_id || '' } }
+  ];
+
+  if (attributes.status) {
+    logAttributes.push({ key: 'status', value: { stringValue: attributes.status } });
   }
+
+  const payload = JSON.stringify({
+    resourceLogs: [{
+      resource: {
+        attributes: [
+          { key: 'service.name', value: { stringValue: serviceName } },
+          { key: 'deployment.environment', value: { stringValue: 'local' } }
+        ]
+      },
+      scopeLogs: [{
+        logRecords: [{
+          timeUnixNano: nowNano,
+          severityText: severityText,
+          body: { stringValue: message },
+          attributes: logAttributes
+        }]
+      }]
+    }]
+  });
+
+  const req = https.request('https://otlp-gateway-prod-us-east-3.grafana.net/otlp/v1/logs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': auth,
+      'Content-Length': Buffer.byteLength(payload)
+    }
+  }, (res) => {
+    // 204 No Content = Recibido exitosamente por Grafana Cloud
+  });
+
+  req.on('error', () => {});
+  req.write(payload);
+  req.end();
 }
 
 module.exports = {

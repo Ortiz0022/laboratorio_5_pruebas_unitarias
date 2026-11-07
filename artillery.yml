@@ -1,0 +1,20 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Prueba de carga UNA Chat (5 req/s durante 60s = 300 total)"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Enviar mensaje de chat"
+    flow:
+      - post:
+          url: "/api/mensaje"
+          json:
+            nombre: "ArtilleryUser"
+            mensaje: "Mensaje de prueba de carga de Artillery"
+            color: "#0084ff"
+

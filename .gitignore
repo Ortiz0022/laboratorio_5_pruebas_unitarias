@@ -9,3 +9,8 @@ node_modules/
 
 # Environment variables
 .env
+
+# Archivos de entrega y reportes locales
+*.zip
+reporte-artillery.json
+lab_*/
