@@ -1,7 +1,8 @@
 <!doctype html>
-<html>
+<html lang="es">
 
 <head>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chat Socket.IO UNA</title>
   <style>
@@ -19,6 +20,37 @@
       display: flex;
       flex-direction: column;
     }
+
+    [hidden] { display: none !important; }
+    #auth-status {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-left: 20px;
+      border-left: 1px solid #e4eaf3;
+      min-width: 0;
+    }
+    .session-identity { min-width: 0; }
+    .session-label { display: block; margin-bottom: 3px; color: #7b889c; font-size: 11px; }
+    #auth-name { display: block; max-width: 300px; overflow-wrap: anywhere; color: #233852; font-size: 13px; font-weight: 600; }
+    #logout {
+      flex-shrink: 0;
+      border: 1px solid #dbe5f3;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: #f4f7fc;
+      color: #315c94;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .18s, border-color .18s;
+    }
+    #logout:hover { background: #e8f0fd; border-color: #a9c6f0; }
+    #logout:focus-visible { outline: 3px solid #89b6ff; outline-offset: 3px; }
+    #m { min-width: 0; }
+    #messages li img, #messages li video { width: auto; max-width: 100% !important; height: auto; }
 
     /* Cabecera moderna */
     .chat-header {
@@ -176,12 +208,16 @@
     }
 
     @media (max-width: 600px) {
+      .chat-header { flex-wrap: wrap; padding: 12px 16px; }
+      #auth-status { width: 100%; margin-left: 0; padding: 12px 0 0; border-left: 0; border-top: 1px solid #e4eaf3; justify-content: space-between; gap: 12px; }
+      #auth-name { max-width: none; }
+      .input-row { flex-wrap: wrap; }
       #nombre {
-        width: 32%;
+        width: 100%;
       }
       #messages {
         padding: 12px;
-        margin-bottom: 130px;
+        margin-bottom: 170px;
       }
     }
   </style>
@@ -194,11 +230,13 @@
       <div class="title">UNA Chat</div>
       <div class="status"><span class="status-dot"></span> En línea</div>
     </div>
-  </div>
-
-  <div id="auth-status" hidden>
-    <span id="auth-name"></span>
-    <button id="logout" type="button">Cerrar sesión</button>
+    <div id="auth-status" hidden>
+      <div class="session-identity">
+        <span class="session-label">Tu sesión</span>
+        <span id="auth-name"></span>
+      </div>
+      <button id="logout" type="button">Cerrar sesión</button>
+    </div>
   </div>
   <ul id="messages"></ul>
   <form action="">

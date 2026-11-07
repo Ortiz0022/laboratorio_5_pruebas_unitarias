@@ -151,7 +151,7 @@ function createAuth(app, io, env = process.env, dependencies = {}) {
     },
     entry(req, res, next) {
       if (!config.enabled || valid(req)) return next();
-      res.type('html').send('<!doctype html><html lang="es"><meta name="viewport" content="width=device-width"><title>UNA Chat</title><h1>UNA Chat</h1><a href="/auth/login">Iniciar sesión con Auth0</a></html>');
+      res.sendFile(require('node:path').join(__dirname, '../login.html'));
     },
     authorizePacket(socket, next) {
       if (!config.enabled) return next();

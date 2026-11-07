@@ -16,6 +16,7 @@
 | `server.js` | Express + Socket.IO; evento `Evento-Mensaje-Server`; exporta `{ http, io }` y solo escucha si es el módulo principal |
 | `libs/unalib.js` | Lógica de validación (única fuente de verdad) |
 | `index.html` | Frontend (jQuery + Socket.IO cliente por CDN); renderizado seguro |
+| `login.html` | Pantalla de ingreso servida por `server/auth.js` para visitantes sin sesión |
 | `test/test.js` | Pruebas unitarias (Mocha) |
 | `tests/integration/` | Integración (Jest + `socket.io-client`) |
 | `tests/e2e/` | End-to-End (Playwright; `testDir` en `playwright.config.js`) |
@@ -40,6 +41,7 @@ npx playwright test --project=chromium --headed        # E2E (servidor activo)
 4. Añade/ajusta pruebas junto con cualquier cambio de comportamiento en `validateMessage`.
 5. No agregues secretos, credenciales ni datos sensibles al repositorio.
 6. No cambies versiones de dependencias salvo que la tarea lo pida.
+7. Conserva `[hidden] { display: none !important; }` en el chat: `#auth-status` usa flex y debe permanecer oculto hasta recibir la identidad autenticada.
 
 ## Documentación detallada (Progressive Disclosure)
 

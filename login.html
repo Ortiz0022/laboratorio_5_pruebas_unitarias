@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bienvenido a UNA Chat</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 28px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172b4d; background: radial-gradient(ellipse at 12% 12%, #dbeafe, transparent 55%), #f4f7fc; }
+    .welcome { width: min(920px, 100%); display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; border: 1px solid #e0e7f1; border-radius: 28px; background: white; box-shadow: 0 24px 80px #203d6d14; }
+    .intro { position: relative; overflow: hidden; padding: 48px 40px; background: linear-gradient(145deg, #1460dd, #0844ad); color: white; }
+    .intro::after { content: ""; position: absolute; width: 250px; height: 250px; border: 45px solid #ffffff0b; border-radius: 50%; right: -100px; bottom: -125px; pointer-events: none; }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; letter-spacing: -.4px; }
+    .mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #ffffff20; font-size: 23px; }
+    .eyebrow { margin: 64px 0 16px; color: #c9ddff; text-transform: uppercase; letter-spacing: 2px; font-size: 11px; font-weight: 700; }
+    h1 { margin: 0; font-size: clamp(32px, 4vw, 44px); line-height: 1.12; letter-spacing: -1.8px; font-weight: 700; }
+    .description { max-width: 290px; margin: 20px 0 42px; line-height: 1.7; color: #dce9ff; font-size: 14px; }
+    .tag { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: #dce9ff; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #9cf3c3; }
+    .access { display: flex; flex-direction: column; justify-content: center; padding: 48px 40px; }
+    .label { color: #1763d5; font-size: 11px; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; margin-bottom: 14px; }
+    h2 { margin: 0 0 12px; font-size: 29px; letter-spacing: -1px; }
+    .access p { margin: 0; color: #65758c; font-size: 14px; line-height: 1.7; }
+    .login { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 30px; padding: 16px 20px; border-radius: 12px; background: #1460dd; color: white; text-decoration: none; font-size: 14px; font-weight: 600; box-shadow: 0 6px 16px #1460dd25; transition: background .18s, transform .18s; }
+    .login:hover { background: #0b4dbd; transform: translateY(-1px); }
+    .login:focus-visible { outline: 3px solid #89b6ff; outline-offset: 4px; }
+    .access .note { margin-top: 20px; font-size: 12px; color: #7b889c; }
+    @media (max-width: 640px) { body { padding: 16px; } .welcome { grid-template-columns: 1fr; border-radius: 22px; } .intro, .access { padding: 30px 26px; } .eyebrow { margin-top: 30px; } .description { margin-bottom: 20px; max-width: none; } h1 { font-size: 34px; } h2 { font-size: 26px; } }
+    @media (prefers-reduced-motion: reduce) { .login { transition: none; } }
+  </style>
+</head>
+<body>
+  <main class="welcome">
+    <section class="intro" aria-labelledby="welcome-title">
+      <div class="brand"><span class="mark" aria-hidden="true">💬</span> UNA Chat</div>
+      <p class="eyebrow">Tu espacio para conversar</p>
+      <h1 id="welcome-title">Una conversación.<br>Muchas ideas.</h1>
+      <p class="description">Conectate, compartí y seguí la conversación en tiempo real.</p>
+      <span class="tag"><span class="dot" aria-hidden="true"></span> Texto, imágenes y videos</span>
+    </section>
+    <section class="access" aria-labelledby="access-title">
+      <span class="label">Bienvenido a tu sala</span>
+      <h2 id="access-title">Entrá a la conversación</h2>
+      <p>Iniciá sesión para entrar al chat y compartir con los demás.</p>
+      <a class="login" href="/auth/login">Iniciar sesión con Auth0 <span aria-hidden="true">↗</span></a>
+      <p class="note">Te llevaremos a la página de inicio de sesión y después volverás a tu sala.</p>
+    </section>
+  </main>
+</body>
+</html>
