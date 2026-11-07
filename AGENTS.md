@@ -23,6 +23,8 @@
 
 ## Comandos esenciales
 
+- Para probar sin usar las credenciales locales, define `DOTENV_CONFIG_PATH=tests/fixtures/empty.env` en el proceso de pruebas y su servidor. No vacíes el `.env` real. Las pruebas de autenticación/Vault se ejecutan con `node --test tests/auth/vault-auth.test.cjs`.
+
 ```bash
 npm start                                              # servidor en :3000
 npm test                                               # unitarias (Mocha)

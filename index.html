@@ -12,88 +12,202 @@
     }
 
     body {
-      font: 13px Helvetica, Arial;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1c1e21;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    form {
-      background: #000;
-      padding: 3px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
+    /* Cabecera moderna */
+    .chat-header {
+      background: #ffffff;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e4e6eb;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    form input {
-      border: 0;
-      padding: 10px;
+    .chat-header .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0084ff, #00c6ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 18px;
     }
 
-    form button {
-      width: 10%;
-      background: rgb(130, 224, 255);
-      border: none;
-      padding: 10px;
+    .chat-header .title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #050505;
     }
 
-    #messages {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
+    .chat-header .status {
+      font-size: 12px;
+      color: #31a24c;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
-    #messages li {
-      padding: 5px 10px;
-    }
-
-    #messages li:nth-child(odd) {
-      background: #eee;
-    }
-
-    #messages {
-      margin-bottom: 90px
-    }
-
-    #nombre,
-    #m {
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #31a24c;
+      border-radius: 50%;
       display: inline-block;
     }
 
-    #m {
-      width: 69%;
-      margin-right: 4px;
+    /* Área de mensajes con scroll */
+    #messages {
+      list-style-type: none;
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 120px;
+    }
+
+    #messages li {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.45;
+      word-wrap: break-word;
+      background: #ffffff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    #messages li b {
+      color: #0084ff;
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+
+    #messages li img,
+    #messages li video {
+      margin-top: 6px;
+      border-radius: 12px;
+      display: block;
+    }
+
+    /* Barra inferior de envío */
+    form {
+      background: #ffffff;
+      padding: 12px 16px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      border-top: 1px solid #e4e6eb;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    form input {
+      border: 1px solid #ccd0d5;
+      padding: 10px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #f0f2f5;
+    }
+
+    form input:focus {
+      border-color: #0084ff;
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
     }
 
     #nombre {
-      width: 20%
+      width: 25%;
+      font-weight: 500;
     }
 
-    /* Texto de ayuda sobre el contenido admitido */
+    #m {
+      flex: 1;
+    }
+
+    form button {
+      background: #0084ff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    form button:hover {
+      background: #006bce;
+    }
+
+    /* Texto de ayuda */
     .ayuda-contenido {
       display: block;
-      color: #d0d0d0;
-      font-size: 13px;
-      line-height: 1.4;
-      padding: 6px 4px 3px;
+      color: #65676b;
+      font-size: 11px;
+      padding: 6px 4px 0;
+      text-align: center;
     }
 
     @media (max-width: 600px) {
-      #messages {
-        margin-bottom: 140px;
+      #nombre {
+        width: 32%;
       }
-
-      .ayuda-contenido {
-        font-size: 12px;
+      #messages {
+        padding: 12px;
+        margin-bottom: 130px;
       }
     }
   </style>
 </head>
 
 <body>
+  <div class="chat-header">
+    <div class="avatar">💬</div>
+    <div>
+      <div class="title">UNA Chat</div>
+      <div class="status"><span class="status-dot"></span> En línea</div>
+    </div>
+  </div>
+
+  <div id="auth-status" hidden>
+    <span id="auth-name"></span>
+    <button id="logout" type="button">Cerrar sesión</button>
+  </div>
   <ul id="messages"></ul>
   <form action="">
-    <input id="nombre" autocomplete="off" placeholder="Username" />
-    <input id="m" autocomplete="off" placeholder="Escriba un mensaje" /><button>Send</button>
-    <p class="ayuda-contenido">Puede enviar mensajes normales, URLs de imágenes (jpg, jpeg, png, gif, webp) o URLs de videos (mp4, webm, ogg).</p>
+    <div class="input-row">
+      <input id="nombre" autocomplete="off" placeholder="Tu nombre" />
+      <input id="m" autocomplete="off" placeholder="Escribe un mensaje..." />
+      <button aria-label="Send">Enviar</button>
+    </div>
+    <p class="ayuda-contenido">Formatos admitidos: texto, imágenes (jpg, png, gif, webp) y videos (mp4, webm, ogg).</p>
   </form>
   <script src="https://cdn.socket.io/4.7.2/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -113,6 +227,22 @@
     }
 
     $(function () {
+      fetch('/auth/me', { cache: 'no-store' }).then(function (response) {
+        if (response.status === 401) { window.location.assign('/'); return null; }
+        return response.json();
+      }).then(function (identity) {
+        if (!identity || !identity.enabled) return;
+        $('#auth-status').prop('hidden', false);
+        $('#auth-name').text(identity.name);
+        $('#nombre').val(identity.name).prop('readOnly', true);
+      }).catch(function () {});
+      $('#logout').on('click', function () {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/auth/logout';
+        document.body.appendChild(form);
+        form.submit();
+      });
       var socket = io();
 
       // emite evento al servidor
